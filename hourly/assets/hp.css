@@ -1,0 +1,10 @@
+.hp-n{font-family:var(--mono);white-space:nowrap}td.hp-n,th.hp-n{text-align:right}
+input[type=number]{width:100%;min-height:46px;padding:10px 12px;font:inherit;font-size:1rem;color:var(--ink);background:var(--field);border:1px solid var(--field-line);border-radius:10px}
+.hp-empty{color:var(--soft);padding:10px 2px}
+.hp-rate{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.hp-rate li{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.hp-rate b{display:block;font:500 1.3rem var(--mono)}.hp-rate small{color:var(--soft);font-size:.82rem}
+.hp-dol{border-left:4px solid var(--line);padding:2px 0 2px 14px;margin:12px 0}
+.hp-dol li{margin:.4em 0}
+fieldset{border:1px solid var(--line);border-radius:10px;margin:12px 0 0;padding:10px 12px}legend{font-weight:600;font-size:.92rem;padding:0 6px}
+@media print{.finder{display:block!important}.finder .acts{display:none}}
