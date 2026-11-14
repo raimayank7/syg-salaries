@@ -1,0 +1,14 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)},INF=1e12;
+var B={std:[[125000,0],[250000,2],[925000,5],[1500000,10],[INF,12]],high:[[125000,5],[250000,7],[925000,10],[1500000,15],[INF,17]],ftb:[[300000,0],[500000,5]],non:[[150000,0],[250000,2],[INF,5]],sstd:[[145000,0],[250000,2],[325000,5],[750000,10],[INF,12]],sftb:[[175000,0],[250000,2],[325000,5],[750000,10],[INF,12]],snon:[[150000,0],[250000,1],[INF,5]],wstd:[[225000,0],[400000,6],[750000,7.5],[1500000,10],[INF,12]],whigh:[[180000,5],[250000,8.5],[400000,10],[750000,12.5],[1500000,15],[INF,17]]};
+function gbp(n){n=Math.floor(n+0.5);return (n<0?'-':'')+'£'+Math.abs(n).toLocaleString('en-GB')}
+function tax(p,b){var t=0,prev=0;b.forEach(function(x){if(p>prev)t+=(Math.min(p,x[0])-prev)*x[1]/100;prev=x[0]});return t}
+function calc(p,region,kind){if(region==='s'){if(kind==='non')return tax(p,B.snon);if(kind==='ftb')return tax(p,B.sftb);if(kind==='add')return tax(p,B.sstd)+(p>=40000?p*0.08:0);return tax(p,B.sstd)}if(region==='w')return tax(p,kind==='add'?B.whigh:B.wstd);if(kind==='ftb')return p<=500000?tax(p,B.ftb):tax(p,B.std);if(kind==='add')return p>=40000?tax(p,B.high):tax(p,B.std);if(kind==='non')return tax(p,B.non);return tax(p,B.std)}
+window.STAMP={calc:calc};
+var f=$('#sd-form');if(!f)return;var pr=$('#sd-p'),rg=$('#sd-r'),kd=$('#sd-k'),res=$('#sd-res');
+function ui(){var p=parseFloat(pr.value);res.hidden=true;if(!(p>=0))return;var r=rg.value,k=kd.value;if(r==='w'&&(k==='ftb'||k==='non')){res.hidden=false;res.innerHTML='<h2>Not available here</h2><p>This calculator has no first-time buyer or non-residential figures for Wales. Choose standard or additional property.</p>';return}
+ var t=calc(p,r,k),lab=r==='w'?'Land Transaction Tax':(r==='s'?'Land and Buildings Transaction Tax':'Stamp Duty Land Tax'),txt=lab+' on '+gbp(p)+': '+gbp(t)+' ('+(t>0?(t/p*100).toFixed(2):'0')+'% of the price).';
+ res.hidden=false;res.className='result rise';res.innerHTML='<h2>'+lab+' on '+gbp(p)+'</h2><div class="tbl"><table><tbody><tr><td>Price</td><td class="tx-n">'+gbp(p)+'</td></tr><tr class="tx-total"><td>Tax to pay</td><td class="tx-n">'+gbp(t)+'</td></tr><tr><td>As a share of the price</td><td class="tx-n">'+(p>0?(t/p*100).toFixed(2):'0')+'%</td></tr></tbody></table></div>'+
+ '<div class="acts"><button class="btn sm" type="button" data-copy="'+S.esc(txt)+'">Copy result</button><button class="btn sm ghost" type="button" data-wa="'+S.esc(txt+' Worked out at '+location.origin+'/')+'">WhatsApp</button><button class="btn sm ghost" type="button" onclick="print()">Print</button></div><p class="hint">Rates of the buyer type you chose, for a freehold purchase. Reliefs, leases, companies and trusts are not included. Confirm with HMRC or your conveyancer.</p>'}
+f.addEventListener('submit',function(e){e.preventDefault();ui()});[pr,rg,kd].forEach(function(el){el.addEventListener('input',ui);el.addEventListener('change',ui)});
+})();

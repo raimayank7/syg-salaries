@@ -1,0 +1,65 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ShareYourGroup//Due dates//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20261215-advancetaxthirdinsta@duedates.shareyourgroup.com
+DTSTAMP:20261113T000000Z
+DTSTART;VALUE=DATE:20261215
+SUMMARY:Advance tax: third instalment (75%)
+DESCRIPTION:Income-tax Act 2025 section 408: pay at least 75 per cent of the advance tax for the year by 15 December less the amounts already paid.
+BEGIN:VALARM
+TRIGGER:-P3D
+ACTION:DISPLAY
+DESCRIPTION:Advance tax: third instalment (75%)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20270315-advancetaxlastinstal@duedates.shareyourgroup.com
+DTSTAMP:20261113T000000Z
+DTSTART;VALUE=DATE:20270315
+SUMMARY:Advance tax: last instalment (100%)
+DESCRIPTION:Income-tax Act 2025 section 408: the whole advance tax\, less amounts already paid\, by 15 March. Presumptive taxpayers under section 58(2) pay the whole by this date.
+BEGIN:VALARM
+TRIGGER:-P3D
+ACTION:DISPLAY
+DESCRIPTION:Advance tax: last instalment (100%)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20270731-incometaxreturnduean@duedates.shareyourgroup.com
+DTSTAMP:20261113T000000Z
+DTSTART;VALUE=DATE:20270731
+SUMMARY:Income-tax return due: any other assessee (tax year 2026-27)
+DESCRIPTION:Income-tax Act 2025 section 263: 31 July for an assessee who is not a company\, audited or in the 30 November group.
+BEGIN:VALARM
+TRIGGER:-P3D
+ACTION:DISPLAY
+DESCRIPTION:Income-tax return due: any other assessee (tax year 2026-27)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20271031-incometaxreturndueco@duedates.shareyourgroup.com
+DTSTAMP:20261113T000000Z
+DTSTART;VALUE=DATE:20271031
+SUMMARY:Income-tax return due: company or audited accounts (tax year 2026-27)
+DESCRIPTION:Income-tax Act 2025 section 263: 31 October for a company\, a person whose accounts are required to be audited and the partner of an audited firm.
+BEGIN:VALARM
+TRIGGER:-P3D
+ACTION:DISPLAY
+DESCRIPTION:Income-tax return due: company or audited accounts (tax year 2026-27)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20271130-incometaxreturndueas@duedates.shareyourgroup.com
+DTSTAMP:20261113T000000Z
+DTSTART;VALUE=DATE:20271130
+SUMMARY:Income-tax return due: assessee with a section 172 report (tax year 2026-27)
+DESCRIPTION:Income-tax Act 2025 section 263: 30 November for an assessee required to furnish the report in section 172.
+BEGIN:VALARM
+TRIGGER:-P3D
+ACTION:DISPLAY
+DESCRIPTION:Income-tax return due: assessee with a section 172 report (tax year 2026-27)
+END:VALARM
+END:VEVENT
+END:VCALENDAR

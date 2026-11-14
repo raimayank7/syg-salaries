@@ -1,0 +1,27 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)};
+function addMonths(dt,n){var m=dt.getUTCMonth()+n,y=dt.getUTCFullYear()+Math.floor(m/12);m=((m%12)+12)%12;var last=new Date(Date.UTC(y,m+1,0)).getUTCDate();return new Date(Date.UTC(y,m,Math.min(dt.getUTCDate(),last)))}
+function iso(dt){return dt.toISOString().slice(0,10)}
+function parse(s){var p=s.split('-');return new Date(Date.UTC(+p[0],+p[1]-1,+p[2]))}
+function fyEnd(dt){return new Date(Date.UTC(dt.getUTCFullYear()+(dt.getUTCMonth()>=3?1:0),2,31))}
+function intimation(r){return addMonths(fyEnd(parse(r)),9)}
+function scrutiny(r){return addMonths(fyEnd(parse(r)),3)}
+function reassess(t,l,o){return addMonths(parse(t),12*(o?(l?5:3):(l?6:4))+3)}
+function showcause(t,l,o){return addMonths(parse(t),12*(o?(l?5:3):(l?6:4)))}
+function plusDays(s,n){return new Date(parse(s).getTime()+n*86400000)}
+function reassessReturn(s){var dt=parse(s),last=new Date(Date.UTC(dt.getUTCFullYear(),dt.getUTCMonth()+1,0));return addMonths(last,3)}
+window.NOTX={intimation:function(s){return iso(intimation(s))},scrutiny:function(s){return iso(scrutiny(s))},reassess:function(s,l,o){return iso(reassess(s,l,o))},showcause:function(s,l,o){return iso(showcause(s,l,o))},plusDays:function(s,n){return iso(plusDays(s,n))},reassessReturn:function(s){return iso(reassessReturn(s))}};
+function fmt(dt){return dt.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}
+var f=$('#nt-form');if(!f)return;var k=$('#nt-k'),a=$('#nt-d'),res=$('#nt-res'),lab=$('#nt-l'),lg=$('#nt-g'),ac=$('#nt-a');
+var L={intim:'Date your return was filed',scrut:'Date your return was filed',re:'Last day of the tax year (2025 Act) or assessment year (1961 Act) the notice is about, a 31 March',sc:'Last day of the tax year (2025 Act) or assessment year (1961 Act) the notice is about, a 31 March',def:'Date of the defect intimation',dem:'Date the notice of demand was served',ren:'Date the reassessment notice was issued'};
+function ui(){var key=k.value,old=ac.value==='old';lab.textContent=L[key];lg.hidden=!(key==='re'||key==='sc');$('#nt-ar').hidden=!(key==='re'||key==='sc');var s=a.value;if(!s){res.hidden=true;return}var out='';
+ if(key==='intim')out='<h2>The intimation under section 270(1) cannot be sent after '+fmt(intimation(s))+'</h2><p>Nine months from the end of the financial year in which the return was made (section 270(4)).</p>';
+ if(key==='scrut')out='<h2>A scrutiny notice under section 270(8) cannot be served after '+fmt(scrutiny(s))+'</h2><p>Three months from the end of the financial year in which the return was furnished (section 270(9)).</p>';
+ if(key==='re'){var l=$('#nt-g').querySelector('input').checked;out=old?'<h2>A reassessment notice under section 148 of the 1961 Act cannot be issued after '+fmt(reassess(s,l,true))+'</h2><p>'+(l?'Five years and three months from the end of the assessment year, where books, documents or evidence show escaped income likely to be \u20b950 lakh or more':'Three years and three months from the end of the assessment year')+' (section 149(1), as printed in the Act text read here).</p>':'<h2>A reassessment notice under section 280 cannot be issued after '+fmt(reassess(s,l,false))+'</h2><p>'+(l?'Six years and three months from the end of the tax year, where books, documents or evidence show escaped income likely to be \u20b950 lakh or more':'Four years and three months from the end of the tax year')+' (section 282(1)). It also cannot be issued within one year from the end of any tax year (section 282(3)).</p>'}
+ if(key==='sc'){var l2=$('#nt-g').querySelector('input').checked;out=old?'<h2>A show-cause notice under section 148A of the 1961 Act cannot be issued after '+fmt(showcause(s,l2,true))+'</h2><p>'+(l2?'Five years from the end of the assessment year, where the escaped income is likely to be \u20b950 lakh or more':'Three years from the end of the assessment year')+' (section 149(2)).</p>':'<h2>A show-cause notice under section 281 cannot be issued after '+fmt(showcause(s,l2,false))+'</h2><p>'+(l2?'Six years from the end of the tax year, where the escaped income is likely to be \u20b950 lakh or more':'Four years from the end of the tax year')+' (section 282(2)).</p>'}
+ if(key==='def')out='<h2>Rectify the defect by '+fmt(plusDays(s,15))+'</h2><p>Fifteen days from the date of the intimation, or a longer period if you apply for it (section 263(7)).</p>';
+ if(key==='dem')out='<h2>Pay by '+fmt(plusDays(s,30))+'; appeal by the same day</h2><p>Thirty days from service of the notice (sections 411(1) and 358(3)). A shorter period may have been specified in the notice.</p>';
+ if(key==='ren')out='<h2>File the return by '+fmt(reassessReturn(s))+' at the latest</h2><p>The period in the notice cannot exceed three months from the end of the month in which it is issued (section 280(1)(c)); the notice may give a shorter period.</p>';
+ res.hidden=false;res.className='result rise';res.innerHTML=out+'<p class="hint">Counted from the date you entered. Holidays are not moved. For tax years from 2026-27 the 2025 Act applies, for earlier years the 1961 Act. The oldest assessment years (up to 2021-22) may follow limits in force before 1 September 2024, which were not read. Not legal advice.</p>'}
+f.addEventListener('submit',function(e){e.preventDefault();ui()});f.addEventListener('input',ui);f.addEventListener('change',ui);ui();
+})();

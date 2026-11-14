@@ -1,0 +1,12 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)},INF=1e12;
+var T={"single":[[0.0,12400.0,10],[12400.0,50400.0,12],[50400.0,105700.0,22],[105700.0,201775.0,24],[201775.0,256225.0,32],[256225.0,640600.0,35],[640600.0,1000000000000,37]],"mfj":[[0.0,24800.0,10],[24800.0,100800.0,12],[100800.0,211400.0,22],[211400.0,403550.0,24],[403550.0,512450.0,32],[512450.0,768700.0,35],[768700.0,1000000000000,37]],"hoh":[[0.0,17700.0,10],[17700.0,67450.0,12],[67450.0,105700.0,22],[105700.0,201750.0,24],[201750.0,256200.0,32],[256200.0,640600.0,35],[640600.0,1000000000000,37]]},STD={"single": 16100.0, "mfj": 32200.0, "hoh": 24150.0};
+function usd(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function fed(i,st){var ti=Math.max(0,i-STD[st]),t=0;T[st].forEach(function(b){if(ti>b[0])t+=(Math.min(ti,b[1])-b[0])*b[2]/100});return[t,ti]}
+function net(i,st){var f=fed(i,st),ss=Math.min(i,184500)*6.2/100,m=i*1.45/100+Math.max(0,i-200000)*0.9/100;return{fed:f[0],ti:f[1],ss:ss,med:m,net:i-f[0]-ss-m}}
+window.TAKEUS={net:net};
+var f=$('#us-form');if(!f)return;var ii=$('#us-i'),ss=$('#us-s'),rs=$('#us-res');
+function ui(){var i=parseFloat(ii.value);rs.hidden=true;if(!(i>=0))return;var r=net(i,ss.value),txt='US 2026 federal: on '+usd(i)+' of wages, federal tax '+usd(r.fed)+', Social Security '+usd(r.ss)+', Medicare '+usd(r.med)+', leaving about '+usd(r.net)+' before state tax.';
+ rs.hidden=false;rs.className='result rise';rs.innerHTML='<h2>Federal take-home on '+usd(i)+'</h2><div class="tbl"><table><tbody><tr><td>Taxable income after the standard deduction</td><td class="tx-n">'+usd(r.ti)+'</td></tr><tr><td>Federal income tax</td><td class="tx-n">'+usd(r.fed)+'</td></tr><tr><td>Social Security (6.2%)</td><td class="tx-n">'+usd(r.ss)+'</td></tr><tr><td>Medicare</td><td class="tx-n">'+usd(r.med)+'</td></tr><tr class="tx-total"><td>Left before state tax</td><td class="tx-n">'+usd(r.net)+'</td></tr><tr><td>A month</td><td class="tx-n">'+usd(r.net/12)+'</td></tr></tbody></table></div><div class="acts"><button class="btn sm" type="button" data-copy="'+S.esc(txt)+'">Copy result</button><button class="btn sm ghost" type="button" onclick="print()">Print</button></div><p class="hint">State and local tax, credits and pre-tax deductions such as a 401(k) are not included.</p>'}
+f.addEventListener('submit',function(e){e.preventDefault();ui()});[ii,ss].forEach(function(el){el.addEventListener('input',ui);el.addEventListener('change',ui)});
+})();

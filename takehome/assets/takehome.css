@@ -1,0 +1,6 @@
+.tx-n{font-family:var(--mono);white-space:nowrap}td.tx-n,th.tx-n{text-align:right}
+input[type=number],select{width:100%;min-height:46px;padding:10px 12px;font:inherit;font-size:1rem;color:var(--ink);background:var(--field);border:1px solid var(--field-line);border-radius:10px}
+.tx-check{display:flex;gap:10px;align-items:flex-start;min-height:44px;padding:8px 0;font-weight:600;font-size:.95rem}.tx-check input{width:22px;height:22px;flex:none;margin-top:2px}
+tr.tx-total td{font-weight:700;border-top:2px solid var(--line)}
+.tx-src{font-size:.9rem;color:var(--soft)}
+@media print{.finder{display:block!important}.finder .acts{display:none}}

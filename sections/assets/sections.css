@@ -1,0 +1,5 @@
+.tx-n{font-family:var(--mono);white-space:nowrap}td.tx-n,th.tx-n{text-align:left}
+input[type=text],input[type=search]{width:100%;min-height:46px;padding:10px 12px;font:inherit;font-size:1rem;color:var(--ink);background:var(--field);border:1px solid var(--field-line);border-radius:10px}
+.sf-res{margin:12px 0}.sf-hit{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--surface2)}.sf-hit h3{margin:0 0 4px;font-size:1.05rem}.sf-hit small{color:var(--soft)}
+.sf-warn{color:var(--soft);font-size:.9rem}.tx-src{font-size:.9rem;color:var(--soft)}
+@media print{.finder{display:block!important}.finder .acts{display:none}}

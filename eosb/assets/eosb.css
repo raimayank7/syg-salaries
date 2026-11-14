@@ -1,0 +1,5 @@
+.tx-n{font-family:var(--mono);white-space:nowrap}td.tx-n,th.tx-n{text-align:right}
+input[type=number]{width:100%;min-height:46px;padding:10px 12px;font:inherit;font-size:1rem;color:var(--ink);background:var(--field);border:1px solid var(--field-line);border-radius:10px}
+tr.tx-total td{font-weight:700;border-top:2px solid var(--line)}
+.tx-src{font-size:.9rem;color:var(--soft)}
+@media print{.finder{display:block!important}.finder .acts{display:none}}

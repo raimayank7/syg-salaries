@@ -1,0 +1,20 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)},INF=1e12;
+var CA=[[11079,0.0,1.0,0],[26264,110.79,2.0,11079],[41452,414.49,4.0,26264],[57542,1022.01,6.0,41452],[72724,1987.41,8.0,57542],[371479,3201.97,9.3,72724],[445771,30986.19,10.3,371479],[742953,38638.27,11.3,445771],[1000000000000,72219.84,12.3,742953]],NY=[[8500,0.0,4.0,0],[11700,340.0,4.5,8500],[13900,484.0,5.25,11700],[80650,600.0,5.5,13900],[215400,4271.0,6.0,80650],[1077550,12356.0,6.85,215400],[5000000,71413.0,9.65,1077550],[25000000,449929.0,10.3,5000000],[1000000000000,2509929.0,10.9,25000000]];
+function sched(x,rows){for(var i=0;i<rows.length;i++){var r=rows[i];if(x<=r[0])return r[1]+(x-r[3])*r[2]/100}return 0}
+function va(x){if(x<=3000)return x*0.02;if(x<=5000)return 60+(x-3000)*0.03;if(x<=17000)return 120+(x-5000)*0.05;return 720+(x-17000)*0.0575}
+var NJS=[[20000,0.014,0],[35000,0.0175,70],[40000,0.035,682.5],[75000,0.05525,1492.5],[500000,0.0637,2126.25],[1000000,0.0897,15126.25],[1e12,0.1075,32926.25]];
+function nj(x){for(var i=0;i<NJS.length;i++){if(x<=NJS[i][0])return x*NJS[i][1]-NJS[i][2]}return 0}
+function stateTax(st,w){if(st==='AZ')return[Math.max(0,w-15750)*0.025,null];if(st==='NJ')return[nj(Math.max(0,w-1000)),null];if(st==='NC')return[Math.max(0,w-12750)*0.0425,null];if(st==='MA')return[Math.max(0,w-4400)*0.05+Math.max(0,w-1083150)*0.04,null];if(st==='VA')return[va(Math.max(0,w-8750-930)),null];if(st==='PA')return[w*3.07/100,null];if(st==='IL'){var ex=w<=250000?2925:0;return[Math.max(0,w-ex)*4.95/100,null]}
+ if(st==='NY'){if(w>107650)return[null,'New York uses tax computation worksheets above an adjusted gross income of $107,650: not worked here'];return[sched(Math.max(0,w-8000),NY),null]}
+ if(st==='CO')return[Math.max(0,w-16100)*4.4/100,null];if(st==='OH'){var o=Math.max(0,w);if(o<=26050)return[0,null];if(o<=100000)return[342+(o-26050)*2.75/100,null];return[2394.32+(o-100000)*3.125/100,null]}if(st==='CA')return[sched(Math.max(0,w-5706),CA),null];if(st==='GA')return[Math.max(0,w-15000)*4.99/100,null];if(st==='MI')return[Math.max(0,w-5800)*4.25/100,null];return[0,null]}
+window.TAKEST={stateTax:stateTax};
+function usd(n){return '$'+Math.round(n).toLocaleString('en-US')}
+var f=$('#st-form');if(!f)return;var ii=$('#st-i'),ss=$('#st-s'),rs=$('#st-res');
+function ui(){var w=parseFloat(ii.value);rs.hidden=true;if(!(w>=0))return;var st=ss.value,r=window.TAKEUS.net(w,'single'),s=stateTax(st,w);rs.hidden=false;rs.className='result rise';
+ if(s[0]===null){rs.innerHTML='<h2>Not worked for this income</h2><p>'+s[1]+'.</p>';return}
+ var left=r.net-s[0],txt=st+' take-home: on '+usd(w)+' of wages, about '+usd(left)+' a year after federal tax, FICA and state tax.';
+ var nm={CA:'California',NY:'New York',IL:'Illinois',PA:'Pennsylvania',TX:'Texas',FL:'Florida',WA:'Washington',GA:'Georgia',OH:'Ohio',CO:'Colorado',MI:'Michigan',VA:'Virginia',MA:'Massachusetts',NC:'North Carolina',AZ:'Arizona',NJ:'New Jersey'}[st];
+ rs.innerHTML='<h2>About '+usd(left)+' a year after federal, FICA and '+nm+' tax</h2><div class="tbl"><table><tbody><tr><td>Federal income tax (2026)</td><td class="tx-n">'+usd(r.fed)+'</td></tr><tr><td>Social Security and Medicare</td><td class="tx-n">'+usd(r.ss+r.med)+'</td></tr><tr><td>'+nm+' income tax</td><td class="tx-n">'+usd(s[0])+'</td></tr><tr class="tx-total"><td>Left</td><td class="tx-n">'+usd(left)+'</td></tr><tr><td>A month</td><td class="tx-n">'+usd(left/12)+'</td></tr></tbody></table></div><div class="acts"><button class="btn sm" type="button" data-copy="'+S.esc(txt)+'">Copy result</button><button class="btn sm ghost" type="button" onclick="print()">Print</button></div><p class="hint">Single filer, wages only, standard deduction or exemption. State rules are for the year named on the page (New York and California: 2025); local taxes (Ohio municipal and school-district taxes among them), payroll premiums such as State Disability Insurance, and credits are not included.</p>'}
+f.addEventListener('submit',function(e){e.preventDefault();ui()});[ii,ss].forEach(function(el){el.addEventListener('input',ui);el.addEventListener('change',ui)});ui();
+})();

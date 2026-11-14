@@ -1,4 +1,4 @@
-const CACHE = 'syg-m-salaries-cdc110db81', SHELL = ["/salaries/assets/site.css?v=1f799d5064", "/salaries/assets/site.js?v=be6129bb4a", "/salaries/icons/logo-light.webp", "/salaries/icons/logo-dark.webp"];
+const CACHE = 'syg-m-salaries-5f0e96f5c0', SHELL = ["/salaries/assets/site.css?v=bdcd893b36", "/salaries/assets/site.js?v=be6129bb4a", "/salaries/icons/logo-light.webp", "/salaries/icons/logo-dark.webp"];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).catch(() => {})); });
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.indexOf('syg-m-salaries-') === 0 && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', e => {

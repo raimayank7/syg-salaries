@@ -1,0 +1,13 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)},INF=1e12;
+var AU={"2026-27":[[18200,0],[45000,15],[135000,30],[190000,37],[1000000000000,45]],"2025-26":[[18200,0],[45000,16],[135000,30],[190000,37],[1000000000000,45]]},FED=[[0,58523,14],[58523,117045,20.5],[117045,181440,26],[181440,258482,29],[258482,INF,33]];
+function money(n){return n.toLocaleString('en-AU',{maximumFractionDigits:0})}
+function auTax(i,y){var t=0,p=0;AU[y].forEach(function(b){if(i>p)t+=(Math.min(i,b[0])-p)*b[1]/100;p=b[0]});return t}
+function lito(i){if(i<=37500)return 700;if(i<=45000)return 700-0.05*(i-37500);if(i<=66667)return Math.max(0,325-0.015*(i-45000));return 0}
+function medi(i,y){if(y==='2025-26'){if(i<=28011)return 0;if(i<=35013)return(i-28011)*0.1}return i*0.02}
+function auNet(i,y){var t=auTax(i,y),o=Math.min(lito(i),t),m=medi(i,y);return{tax:t,lito:o,med:m,net:i-(t-o)-m}}
+window.TAKEX={auNet:auNet};
+var a=$('#au-form');if(a){var ai=$('#au-i'),ay=$('#au-y'),ar=$('#au-res');function ua(){var i=parseFloat(ai.value);ar.hidden=true;if(!(i>=0))return;var r=auNet(i,ay.value),txt='Australia '+ay.value+': on $'+money(i)+' take-home is about $'+money(r.net)+' a year, $'+money(r.net/12)+' a month, before super and other items.';
+ ar.hidden=false;ar.className='result rise';ar.innerHTML='<h2>Take-home on $'+money(i)+' ('+ay.value+')</h2><div class="tbl"><table><tbody><tr><td>Income tax before offsets</td><td class="tx-n">$'+money(r.tax)+'</td></tr><tr><td>Low income tax offset</td><td class="tx-n">-$'+money(r.lito)+'</td></tr><tr><td>Medicare levy</td><td class="tx-n">$'+money(r.med)+'</td></tr><tr class="tx-total"><td>Take-home a year</td><td class="tx-n">$'+money(r.net)+'</td></tr><tr><td>A month</td><td class="tx-n">$'+money(r.net/12)+'</td></tr></tbody></table></div><div class="acts"><button class="btn sm" type="button" data-copy="'+S.esc(txt)+'">Copy result</button><button class="btn sm ghost" type="button" data-wa="'+S.esc(txt+' Worked out at '+location.origin+'/takehome/australia-take-home/')+'">WhatsApp</button><button class="btn sm ghost" type="button" onclick="print()">Print</button></div><p class="hint">Taxable income for a resident who is single with no dependants, no HELP debt and no other offsets. Medicare levy: 2%, with the 2025-26 low-income reduction.</p>'}
+ a.addEventListener('submit',function(e){e.preventDefault();ua()});[ai,ay].forEach(function(el){el.addEventListener('input',ua);el.addEventListener('change',ua)})}
+})();

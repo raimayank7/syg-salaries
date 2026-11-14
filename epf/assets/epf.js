@@ -1,0 +1,21 @@
+(function(){'use strict';
+var d=document,S=window.SYG,$=function(s){return d.querySelector(s)};
+function rhu(x){return Math.floor(x+0.5+1e-9)}
+function inr(n,dp){dp=dp||0;if(dp===0)n=rhu(n);return (n<0?'-':'')+'₹'+Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:dp,maximumFractionDigits:dp})}
+function contrib(w,eps){var base=Math.min(w,25000),ee=rhu(base*0.12),ue=eps&&w<=25000,e=ue?rhu(base*0.0833):0;return {base:base,ee:ee,eps:e,er_epf:ee-e,edli:rhu(base*0.005),admin:rhu(base*0.005)}}
+function r2(x){return Math.round((x+1e-9)*100)/100}
+function trans(w,k){var p2=w*14/30,p1,we,wp,ee,er,eps,edli,adm;
+ if(k==='A'){we=wp=p2;ee=0.12*p2;er=0.0367*p2;eps=0.0833*p2;edli=adm=0.005*p2}
+ else if(k==='B'){p1=w*16/30;we=w;wp=p2;ee=0.12*w;er=0.12*p1+0.0367*p2;eps=0.0833*p2;edli=adm=0.005*w}
+ else{p1=Math.min(w,15000)*16/30;we=wp=p1+p2;ee=0.12*we;er=0.0367*we;eps=0.0833*wp;edli=adm=0.005*we}
+ var o={wages_epf:r2(we),wages_eps:r2(wp),ee:r2(ee),er_epf:r2(er),eps:r2(eps),edli:r2(edli),admin:r2(adm)};o.total=r2(o.ee+o.er_epf+o.eps+o.edli+o.admin);return o}
+function project(m,y,r){var bal=0;for(var i=0;i<y;i++){var acc=0;for(var j=0;j<12;j++){acc+=bal*r/1200;bal+=m}bal+=rhu(acc)}return bal}
+window.EPFC={contrib:contrib,trans:trans,project:project};
+var f=$('#ef-form');if(!f)return;var kind=f.getAttribute('data-k'),w=$('#ef-w'),e=$('#ef-e'),k2=$('#ef-t'),yy=$('#ef-y'),rr=$('#ef-r'),res=$('#ef-res');
+function show(rows,txt,h){res.hidden=false;res.className='result rise';res.innerHTML='<h2>Result</h2><div class="tbl"><table><tbody>'+rows.map(function(x){return '<tr'+(x[2]?' class="tx-total"':'')+'><td>'+x[0]+'</td><td class="tx-n">'+x[1]+'</td></tr>'}).join('')+'</tbody></table></div><div class="acts"><button class="btn sm" type="button" data-copy="'+S.esc(txt)+'">Copy result</button><button class="btn sm ghost" type="button" data-wa="'+S.esc(txt+' Worked out at '+location.origin+'/')+'">WhatsApp</button><button class="btn sm ghost" type="button" onclick="print()">Print</button></div>'+h}
+function ui(){var wv=parseFloat(w.value);res.hidden=true;if(!(wv>0))return;
+ if(kind==='m'){var c=contrib(wv,e.checked),tot=c.ee+c.er_epf+c.eps+c.edli+c.admin;show([['PF wages counted (up to ₹25,000)',inr(c.base)],['Employee: EPF 12%',inr(c.ee)],['Employer: EPS 8.33%',inr(c.eps)],['Employer: EPF 3.67%',inr(c.er_epf)],['Employer: EDLI 0.5%',inr(c.edli)],['EPF admin charges 0.5%',inr(c.admin)],['Total remitted',inr(tot),1],['Goes into the employee\'s PF account (EE + employer EPF)',inr(c.ee+c.er_epf)]],'PF wage '+inr(wv)+': employee '+inr(c.ee)+', employer EPS '+inr(c.eps)+', employer EPF '+inr(c.er_epf)+'.','<p class="hint">Rounded to whole rupees as in the EPFO table. For wages above ₹25,000 the contribution is on the ceiling unless the member contributes on higher wages. Admin charges have a minimum of ₹500 a month per establishment.</p>')}
+ else if(kind==='t'){var o=trans(Math.min(wv,25000),k2.value);show([['EPF wages in September',inr(o.wages_epf,2)],['EPS wages in September',inr(o.wages_eps,2)],['Employee EPF 12%',inr(o.ee,2)],['Employer EPF (A/c 1)',inr(o.er_epf,2)],['Employer EPS (A/c 10)',inr(o.eps,2)],['EDLI 0.5%',inr(o.edli,2)],['Admin charges 0.5%',inr(o.admin,2)],['Total for September 2026',inr(o.total,2),1]],'September 2026 EPF contribution on wages '+inr(wv)+' (scenario '+k2.value+'): '+inr(o.total,2)+'.','<p class="hint">The three scenarios of EPFO FAQ Q7 for wages up to ₹25,000: A excluded until 16 September, B EPF and EDLI member now joining EPS, C contributing on ₹15,000 until 16 September.</p>')}
+ else{var c2=contrib(wv,true),m=c2.ee+c2.er_epf,y=parseInt(yy.value)||10,r=parseFloat(rr.value)||0,b=project(m,y,r);show([['Added to the PF account each month',inr(m)],['Years',y],['Total put in',inr(m*12*y)],['Interest at '+r+'%',inr(b-m*12*y)],['Balance after '+y+' years',inr(b),1]],'PF balance after '+y+' years on a wage of '+inr(wv)+' at '+r+'%: about '+inr(b)+'.','<p class="hint">An estimate: 8.25% was the rate for FY 2025-26 (EPFO FAQ Q47); the rate for later years is set each year. The employee share and the employer EPF share go to the PF account; the EPS share goes to the pension fund.</p>')}}
+f.addEventListener('submit',function(ev){ev.preventDefault();ui()});[w,e,k2,yy,rr].forEach(function(el){if(el){el.addEventListener('input',ui);el.addEventListener('change',ui)}});
+})();
